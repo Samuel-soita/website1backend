@@ -1,0 +1,52 @@
+name: Manual Backend Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - development
+          - production
+      branch:
+        description: 'Branch to deploy from'
+        required: true
+        default: 'development'
+
+jobs:
+  deploy:
+    name: Deploy Backend to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+      
+      - name: Build application
+        working-directory: ./backend
+        run: npm run build
+        env:
+          NODE_ENV: production
+      
+      - name: Deploy Backend
+        run: echo "🚀 Deploying backend to ${{ github.event.inputs.environment }}"
+        # Add your deployment steps here
+      
+      - name: Deployment complete
+        run: echo "✅ Backend deployment to ${{ github.event.inputs.environment }} complete"
