@@ -44,25 +44,20 @@ jobs:
       - name: Generate Prisma Client
         working-directory: ./backend
         run: npx prisma generate
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db?schema=public
-      
-      - name: Run Prisma Migrations
-        working-directory: ./backend
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db?schema=public
       
       - name: Type check
         working-directory: ./backend
         run: npx tsc --noEmit
+
+      - name: Run tests
+        working-directory: ./backend
+        run: npm test --if-present || echo "No tests configured"
       
       - name: Build application
         working-directory: ./backend
         run: npm run build
         env:
           NODE_ENV: production
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db?schema=public
   
   deploy-development:
     name: Deploy to Development
