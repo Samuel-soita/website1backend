@@ -12,6 +12,8 @@ import feedbackRoutes from './routes/feedback';
 import supportRoutes from './routes/support';
 import internshipRoutes from './routes/internship';
 import careerRoutes from './routes/career';
+import projectRoutes from './routes/project';
+import collaboratorRoutes from './routes/collaborator';
 
 // Middleware
 import { errorHandler, AppError } from './middleware/errorHandler';
@@ -42,8 +44,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Health check
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
+  res.status(200).json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development'
@@ -58,6 +60,8 @@ app.use('/api/feedback', feedbackRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/internship', internshipRoutes);
 app.use('/api/career', careerRoutes);
+app.use('/api/project', projectRoutes);
+app.use('/api/collaborator', collaboratorRoutes);
 
 // API info endpoint
 app.get('/api', (req, res) => {

@@ -185,3 +185,60 @@ enum CareerStatus {
   ACCEPTED
   REJECTED
 }
+
+// Project Commissioning (Enterprise)
+model ProjectInquiry {
+  id             String   @id @default(uuid())
+  clientName     String
+  clientEmail    String
+  companyName    String?
+  projectType    String   // e.g., "Web App", "Mobile App", "E-commerce"
+  budgetRange    String   // e.g., "$5k-$10k", "$10k-$25k"
+  timeline       String   // e.g., "1-3 months"
+  description    String   @db.Text
+  techPreferences String? // JSON or comma-separated string
+  status         ProjectInquiryStatus @default(NEW)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("project_inquiries")
+}
+
+enum ProjectInquiryStatus {
+  NEW
+  UNDER_REVIEW
+  PROPOSAL_SENT
+  ACCEPTED
+  DECLINED
+  ARCHIVED
+}
+
+// Collaborator/Freelancer Applications (Enterprise)
+model CollaboratorApplication {
+  id             String   @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String   @unique
+  phone          String?
+  role           String   // e.g., "Frontend Dev", "UI/UX Designer"
+  portfolioUrl   String
+  linkedinUrl    String?
+  rate           String?  // e.g., "$50/hr"
+  availability   String   // e.g., "Part-time", "Full-time"
+  skills         String   // JSON or comma-separated
+  experienceYears Int?
+  bio            String   @db.Text
+  status         CollaboratorStatus @default(PENDING)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("collaborator_applications")
+}
+
+enum CollaboratorStatus {
+  PENDING
+  REVIEWED
+  INTERVIEWED
+  APPROVED
+  REJECTED
+}
